@@ -2,6 +2,9 @@ name: "Push"
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
   Build-Docker:
     runs-on: ubuntu-latest
