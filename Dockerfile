@@ -1,4 +1,4 @@
-FROM nginx:1.25.4-alpine
+FROM nginx:1.27.5-alpine
 
 # Optionally, update packages and remove cache to further reduce vulnerabilities
 RUN apk update && \
