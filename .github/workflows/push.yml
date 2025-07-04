@@ -51,7 +51,7 @@ jobs:
       security-events: write # Required to upload SARIF results
     steps:
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.31.0
+        uses: aquasecurity/trivy-action@0.32.0
         with:
           image-ref: 'rotoku/portfolio:${{ github.sha }}'
           format: 'sarif'
