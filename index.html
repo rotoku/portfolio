@@ -1,35 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfólio</title>
-  <link href="css/main.css" rel="stylesheet" />
-  <link rel="icon" type="image/ico" href="./imgs/favicon.ico" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Portfólio</title>
+    <meta name="description"
+        content="Profissional com mais de 22 anos de experiência em TI, arquitetura de software e cultura DevSecOps.">
+
+    <!-- Open Graph para links em redes sociais e apps de mensagem -->
+    <meta property="og:title" content="Rodrigo Kumabe | Engenharia de Software & DevSecOps">
+    <meta property="og:description" content="Eleve seu negócio digital a outro nível com um profissional de qualidade.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.kumabe.com.br">
+    <meta property="og:image" content="./imgs/kumaber_2024.png">
+
+    <link rel="icon" href="./imgs/favicon.ico" type="image/x-icon">
+
+    <!-- Tipografia Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/main.css">
 </head>
 
 <body>
-  <header></header>
-  <main class="container">
-    <section class="container__content">
-      <h1 class="container__content__title">
-        Eleve seu negócio digital a outro nível
-        <strong class="titulo-destaque">com um profissional de qualidade!</strong>
-      </h1>
-      <p class="container__content__paragraph">Olá! Sou Rodrigo Kumabe &#129299;! Sou um profissional de TI, com mais de
-        22 anos de experiência na área de tecnologia da informação com forte conhecimento em arquitetura de software,
-        engenharia de software e Cultura/Práticas DevSecOps. Vamos conversar?</p>
-      <div class="container__content__links">
-        <a href="https://www.github.com/rotoku/" class="container__content__links_link">GitHub</a>
-        <a href="https://www.linkedin.com/in/bccd92741c8b7b202ae4da316e7a153a/"
-          class="container__content__links_link">LinkedIn</a>
-      </div>
-    </section>
-    <img src="./imgs/kumaber_2024.png" alt="Foto do Rodrigo Kumabe" />
-  </main>
-  <footer></footer>
+    <header></header>
+    <main class="container">
+        <section class="container__content">
+            <h1 class="container__content__title">
+                Eleve seu negócio digital a outro nível
+                <strong class="titulo-destaque">com um profissional de qualidade!</strong>
+            </h1>
+            <p class="container__content__paragraph">Olá! Sou Rodrigo Kumabe &#129299;! Sou um profissional de TI, com
+                mais de
+                22 anos de experiência na área de tecnologia da informação com forte conhecimento em arquitetura de
+                software,
+                engenharia de software e Cultura/Práticas DevSecOps. Vamos conversar?</p>
+            <div class="container__content__links">
+                <a href="https://www.github.com/rotoku/" class="container__content__links_link">GitHub</a>
+                <a href="https://www.linkedin.com/in/bccd92741c8b7b202ae4da316e7a153a/"
+                    class="container__content__links_link">LinkedIn</a>
+            </div>
+        </section>
+        <!-- Bloco com fallback automático -->
+        <picture>
+            <source srcset="./imgs/kumaber_2024.avif" type="image/avif">
+            <source srcset="./imgs/kumaber_2024.webp" type="image/webp">
+            <img src="./imgs/kumaber_2024.png" alt="Foto de Rodrigo Kumabe" class="hero__image" loading="eager"
+                width="420" height="420">
+        </picture>
+    </main>
+    <footer></footer>
 </body>
 
 </html>
