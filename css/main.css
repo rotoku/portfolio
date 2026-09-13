@@ -12,6 +12,56 @@ body {
     color: #F6F6F6;
 }
 
+.portfolio-navbar {
+    padding: 1.25rem 7%;
+    background-color: #000000;
+}
+
+.portfolio-navbar__inner {
+    max-width: 1400px;
+    margin-inline: auto;
+}
+
+.portfolio-navbar__brand {
+    color: #F6F6F6;
+    font-family: 'Krona One', sans-serif;
+    font-size: 1.1rem;
+}
+
+.portfolio-navbar__brand span {
+    color: #22D4FD;
+}
+
+.portfolio-navbar__brand:hover,
+.portfolio-navbar__brand:focus,
+.portfolio-navbar__link,
+.portfolio-navbar__link:hover,
+.portfolio-navbar__link:focus {
+    color: #F6F6F6;
+}
+
+.portfolio-navbar__link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .9rem;
+}
+
+.portfolio-navbar__link:hover,
+.portfolio-navbar__link.active {
+    color: #22D4FD;
+}
+
+.portfolio-navbar__toggler {
+    border-color: #22D4FD;
+}
+
+.portfolio-navbar__toggler:focus {
+    box-shadow: 0 0 0 .2rem rgba(34, 212, 253, .25);
+}
+
+.portfolio-navbar__toggler .navbar-toggler-icon {
+    filter: invert(1);
+}
+
 .titulo-destaque {
     color: #22D4FD;
 }
@@ -61,4 +111,14 @@ body {
 img {
     max-width: 800px;
     max-height: 600px;
+}
+
+@media (max-width: 991.98px) {
+    .portfolio-navbar .navbar-collapse {
+        padding-top: 1rem;
+    }
+
+    .portfolio-navbar__link {
+        padding-block: .7rem;
+    }
 }

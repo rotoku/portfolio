@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PROFIN - Projeto Financeiro</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Remove default number input spinner arrows for a clean look */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-slate-900 text-white shadow-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-emerald-500 text-slate-950 font-black p-2 rounded-lg text-lg tracking-wider">
+          PF
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight">PROFIN</h1>
+          <p class="text-xs text-slate-400">Projeto Financeiro • Controle Anual</p>
+        </div>
+      </div>
+      <div class="text-xs font-semibold px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-slate-300">
+        Moeda: BRL (R$)
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+    <!-- KPI Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+        <span class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Créditos</span>
+        <div id="kpi-creditos" class="text-2xl font-extrabold text-emerald-600 mt-1">R$ 0,00</div>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+        <span class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Débitos</span>
+        <div id="kpi-debitos" class="text-2xl font-extrabold text-rose-600 mt-1">R$ 0,00</div>
+      </div>
+      <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+        <span class="text-xs font-medium uppercase tracking-wider text-slate-400">Saldo Líquido</span>
+        <div id="kpi-saldo" class="text-2xl font-extrabold text-slate-900 mt-1">R$ 0,00</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-200 mb-6 space-x-4">
+      <button 
+        id="tab-btn-dados" 
+        onclick="switchTab('dados')"
+        class="pb-3 px-4 font-semibold text-sm border-b-2 border-emerald-500 text-emerald-600 transition-colors duration-150 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        Dados
+      </button>
+      <button 
+        id="tab-btn-grafico" 
+        onclick="switchTab('grafico')"
+        class="pb-3 px-4 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-colors duration-150 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        Gráfico
+      </button>
+    </div>
+
+    <!-- Tab 1: Dado (Inputs) -->
+    <section id="tab-dados" class="block">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
+          <h2 class="font-bold text-slate-800 text-sm md:text-base">Lançamento Mensal (Janeiro a Dezembro)</h2>
+          <button 
+            type="button" 
+            onclick="clearAllInputs()" 
+            class="text-xs text-rose-600 hover:text-rose-800 font-semibold border border-rose-200 hover:bg-rose-50 px-3 py-1.5 rounded-lg transition-colors">
+            Limpar Todos
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-100/75 text-slate-600 uppercase text-[11px] tracking-wider font-semibold border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Mês</th>
+                <th class="py-3 px-4">Créditos (R$)</th>
+                <th class="py-3 px-4">Débitos (R$)</th>
+                <th class="py-3 px-4 text-right">Saldo Mensal</th>
+              </tr>
+            </thead>
+            <tbody id="months-table-body" class="divide-y divide-slate-100 font-medium">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Gráfico (Bar Chart) -->
+    <section id="tab-grafico" class="hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div class="mb-4">
+          <h2 class="text-base font-bold text-slate-800">Comparativo Mensal: Créditos vs Débitos</h2>
+          <p class="text-xs text-slate-500">Valores representados em Real Brasileiro (R$)</p>
+        </div>
+        <div class="relative w-full h-[450px]">
+          <canvas id="financialChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200 bg-white">
+    PROFIN &copy; 2026 • Ferramenta de Gestão Financeira Pessoal
+  </footer>
+
+  <!-- App Script -->
+  <script>
+    const months = [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+
+    // Initial mock values to demonstrate UI immediately
+    const initialCredits = [4500, 4500, 4800, 5100, 4800, 5300, 5200, 5200, 5500, 5200, 7500, 8000];
+    const initialDebits  = [3200, 2800, 3100, 3500, 3300, 3900, 3600, 3400, 3800, 3700, 4200, 5100];
+
+    // Currency Formatter
+    const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2
+    });
+
+    let chartInstance = null;
+
+    // Build input table rows
+    function initTable() {
+      const tbody = document.getElementById('months-table-body');
+      tbody.innerHTML = '';
+
+      months.forEach((month, i) => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-50/75 transition-colors';
+
+        row.innerHTML = `
+          <td class="py-3 px-4 font-semibold text-slate-700">${month}</td>
+          <td class="py-2 px-4">
+            <div class="relative rounded-md shadow-sm w-full max-w-[200px]">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">R$</span>
+              <input 
+                type="number" 
+                step="0.01" 
+                min="0" 
+                id="credito-${i}" 
+                value="${initialCredits[i] || 0}"
+                oninput="handleValueChange()" 
+                class="block w-full rounded-lg border border-slate-300 pl-9 pr-3 py-1.5 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none text-emerald-700 font-semibold"
+                placeholder="0,00"
+              />
+            </div>
+          </td>
+          <td class="py-2 px-4">
+            <div class="relative rounded-md shadow-sm w-full max-w-[200px]">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">R$</span>
+              <input 
+                type="number" 
+                step="0.01" 
+                min="0" 
+                id="debito-${i}" 
+                value="${initialDebits[i] || 0}"
+                oninput="handleValueChange()" 
+                class="block w-full rounded-lg border border-slate-300 pl-9 pr-3 py-1.5 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none text-rose-700 font-semibold"
+                placeholder="0,00"
+              />
+            </div>
+          </td>
+          <td class="py-3 px-4 text-right font-semibold" id="saldo-mes-${i}">
+            R$ 0,00
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Read current values from inputs
+    function getFinancialData() {
+      const creditos = [];
+      const debitos = [];
+
+      for (let i = 0; i < 12; i++) {
+        const cVal = parseFloat(document.getElementById(`credito-${i}`).value) || 0;
+        const dVal = parseFloat(document.getElementById(`debito-${i}`).value) || 0;
+        creditos.push(cVal);
+        debitos.push(dVal);
+      }
+
+      return { creditos, debitos };
+    }
+
+    // Update KPI cards and per-month balances
+    function updateCalculations() {
+      const { creditos, debitos } = getFinancialData();
+
+      let totalCreditos = 0;
+      let totalDebitos = 0;
+
+      for (let i = 0; i < 12; i++) {
+        const c = creditos[i];
+        const d = debitos[i];
+        const diff = c - d;
+
+        totalCreditos += c;
+        totalDebitos += d;
+
+        const monthlyCell = document.getElementById(`saldo-mes-${i}`);
+        monthlyCell.textContent = currencyFormatter.format(diff);
+        monthlyCell.className = `py-3 px-4 text-right font-semibold ${
+          diff >= 0 ? 'text-emerald-600' : 'text-rose-600'
+        }`;
+      }
+
+      const saldoLiquido = totalCreditos - totalDebitos;
+
+      document.getElementById('kpi-creditos').textContent = currencyFormatter.format(totalCreditos);
+      document.getElementById('kpi-debitos').textContent = currencyFormatter.format(totalDebitos);
+      
+      const kpiSaldo = document.getElementById('kpi-saldo');
+      kpiSaldo.textContent = currencyFormatter.format(saldoLiquido);
+      kpiSaldo.className = `text-2xl font-extrabold mt-1 ${
+        saldoLiquido >= 0 ? 'text-emerald-600' : 'text-rose-600'
+      }`;
+    }
+
+    // Initialize or refresh Chart.js
+    function renderChart() {
+      const ctx = document.getElementById('financialChart').getContext('2d');
+      const { creditos, debitos } = getFinancialData();
+
+      if (chartInstance) {
+        chartInstance.data.datasets[0].data = creditos;
+        chartInstance.data.datasets[1].data = debitos;
+        chartInstance.update();
+        return;
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [
+            {
+              label: 'Créditos',
+              data: creditos,
+              backgroundColor: 'rgba(16, 185, 129, 0.85)',
+              hoverBackgroundColor: 'rgba(5, 150, 105, 1)',
+              borderRadius: 6,
+              borderSkipped: false
+            },
+            {
+              label: 'Débitos',
+              data: debitos,
+              backgroundColor: 'rgba(244, 63, 94, 0.85)',
+              hoverBackgroundColor: 'rgba(225, 29, 72, 1)',
+              borderRadius: 6,
+              borderSkipped: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                boxWidth: 14,
+                font: { size: 12, weight: 'bold' },
+                color: '#334155'
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ${context.dataset.label}: ${currencyFormatter.format(context.raw)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return currencyFormatter.format(value);
+                },
+                color: '#64748b'
+              },
+              grid: {
+                color: '#f1f5f9'
+              }
+            },
+            x: {
+              ticks: { color: '#64748b' },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    function handleValueChange() {
+      updateCalculations();
+      if (chartInstance) {
+        renderChart();
+      }
+    }
+
+    function clearAllInputs() {
+      for (let i = 0; i < 12; i++) {
+        document.getElementById(`credito-${i}`).value = 0;
+        document.getElementById(`debito-${i}`).value = 0;
+      }
+      handleValueChange();
+    }
+
+    // Tab Switching Logic
+    function switchTab(tab) {
+      const tabDados = document.getElementById('tab-dados');
+      const tabGrafico = document.getElementById('tab-grafico');
+      const btnDados = document.getElementById('tab-btn-dados');
+      const btnGrafico = document.getElementById('tab-btn-grafico');
+
+      if (tab === 'dados') {
+        tabDados.classList.remove('hidden');
+        tabGrafico.classList.add('hidden');
+
+        btnDados.className = "pb-3 px-4 font-semibold text-sm border-b-2 border-emerald-500 text-emerald-600 transition-colors flex items-center gap-2";
+        btnGrafico.className = "pb-3 px-4 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-2";
+      } else {
+        tabDados.classList.add('hidden');
+        tabGrafico.classList.remove('hidden');
+
+        btnGrafico.className = "pb-3 px-4 font-semibold text-sm border-b-2 border-emerald-500 text-emerald-600 transition-colors flex items-center gap-2";
+        btnDados.className = "pb-3 px-4 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-2";
+
+        // Render or update chart after container is visible
+        renderChart();
+      }
+    }
+
+    // Initialize application on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initTable();
+      updateCalculations();
+    });
+  </script>
+</body>
+</html>
